@@ -1,0 +1,66 @@
+
+#carta {
+  position: relative;
+  width: 200px;
+  height: 260px;
+  transform-style: preserve-3d;
+  transition: all 0.5s ease;
+  cursor: pointer;
+  margin: 10px;
+}
+
+#container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.azul {
+  background: #0000ff;  
+}
+
+.verde {
+  background: #00ff00;
+}
+
+.roxo {
+  background: #ff00ff;
+}
+
+.amarelo {
+  background: #ffff00;
+}
+
+.marrom {
+  background: #8b4513;
+}
+
+.ciano {
+  background: #00ffff;
+}
+
+.active {
+  transform: rotateY(180deg);
+}
+
+img {
+  width: 100%;
+  height: 100%;
+}
+
+#frente {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  transform: rotateY(180deg);
+}
+
+#verso {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  background: #ff0000;
+}
