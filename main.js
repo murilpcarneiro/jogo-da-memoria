@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   for (let i = 0; i < carta.length; i++) {
     const corIndex = Math.floor(Math.random(i / 2) % cores.length);
-    carta[i].classList.add(cores[corIndex]);
+    carta[i].classList.toggle(cores[corIndex]);
 
     carta[i].addEventListener('click', function () {
       carta[i].classList.toggle('active');
