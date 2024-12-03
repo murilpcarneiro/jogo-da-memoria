@@ -1,26 +1,85 @@
-document.addEventListener('DOMContentLoaded', function () {
-  const carta = document.querySelectorAll('#carta');
-  const carta1 = carta[0];
-  const carta2 = carta[1];
-  const carta3 = carta[2];
-  const carta4 = carta[3];
-  const carta5 = carta[4];
-  const carta6 = carta[5];
-  const carta7 = carta[6];
-  const carta8 = carta[7];
-  const carta9 = carta[8];
-  const carta10 = carta[9];
-  const carta11 = carta[10];
-  const carta12 = carta[11];
-  const cores = ['azul', 'verde', 'roxo', 'amarelo', 'marrom', 'ciano'];
+const tabuleiro = document.querySelector('.tabuleiro');
+const scoreDisplay = document.getElementById('score');
+document.getElementById('startButton').addEventListener('click', iniciarJogo);
 
-  for (let i = 0; i < carta.length; i++) {
-    const corIndex = Math.floor(Math.random(i / 2) % cores.length);
-    carta[i].classList.toggle(cores[corIndex]);
 
-    carta[i].addEventListener('click', function () {
-      carta[i].classList.toggle('active');
-    });
-  }
+const imagens = ['🎶', '👾', '👽', '👻', '💩', '🤖'];
+let cartas = [...imagens, ...imagens];
+let cartasSelecionadas = [];
+let cartasBloqueadas = true;
+let score = 0;
+let chances = 3;
 
+cartas.sort(() => Math.random() - 0.5);
+
+function iniciarJogo() {
+  const cartas = document.querySelectorAll('.carta');
+  cartas.forEach(carta => carta.classList.add('flip'));
+
+  setTimeout(() => {
+    cartas.forEach(carta => carta.classList.remove('flip'));
+    cartasBloqueadas = false;
+  }, 2000);
+
+  cartasBloqueadas = true;
+  score = 0;
+  chances = 3;
+  atualizarPlacar();
+}
+
+cartas.forEach(imagem => {
+  const carta = document.createElement('div');
+  carta.classList.add('carta');
+  carta.innerHTML = `
+        <div class="carta-inner">
+            <div class="frente">${imagem}</div>
+            <div class="verso"></div>
+        </div>
+    `;
+  tabuleiro.appendChild(carta);
+
+  carta.addEventListener('click', () => {
+    if (!carta.classList.contains('flip') && !cartasBloqueadas) {
+      carta.classList.add('flip');
+      cartasSelecionadas.push(carta);
+
+      if (cartasSelecionadas.length === 2) {
+        verificarPar();
+      }
+    }
+  });
 });
+
+function verificarPar() {
+  cartasBloqueadas = true;
+  const [primeiraCarta, segundaCarta] = cartasSelecionadas;
+
+  if (primeiraCarta.innerHTML === segundaCarta.innerHTML) {
+    score += 3;
+    resetarSelecao();
+  } else {
+    setTimeout(() => {
+      primeiraCarta.classList.remove('flip');
+      segundaCarta.classList.remove('flip');
+      score -= 2;
+      chances--;
+      resetarSelecao();
+    }, 1000);
+  }
+}
+
+function resetarSelecao() {
+  cartasSelecionadas = [];
+  cartasBloqueadas = false;
+  score = Math.max(0, score);
+  atualizarPlacar();
+
+  if (chances === 0 || document.querySelectorAll('.carta:not(.flip)').length === 0) {
+    setTimeout(() => alert(chances === 0 ? 'Você perdeu!' : 'Parabéns!'), 500);
+    setTimeout(() => location.reload(), 1000);
+  }
+}
+
+function atualizarPlacar() {
+  scoreDisplay.textContent = `Pontuação: ${score} | Chances: ${chances}`;
+}
